@@ -8,12 +8,19 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: update-umbrella-feed
+  cancel-in-progress: false
+
 jobs:
   update-feed:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
 
       - name: Rebuild feed.xml from upstream
         run: |
@@ -95,5 +102,6 @@ jobs:
             echo "feed and index pages unchanged, nothing to commit"
           else
             git commit -m "Update umbrella feed and state index pages"
-            git push
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi
