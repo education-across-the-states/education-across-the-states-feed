@@ -89,6 +89,75 @@ jobs:
               print(f"updated feed.xml ({len(new_guids)} episodes)")
           PYEOF
 
+      - name: Rebuild educacion/feed.xml from upstream (Spanish flagship)
+        run: |
+          python3 - <<'PYEOF'
+          import os, re, urllib.request
+
+          UPSTREAM = "https://muse.ai/podcasts/feed/1337692426099284/723356ab-bdbc-4b30-96b8-2a8971d748be"
+          MIRROR_URL = "https://education-across-the-states.github.io/education-across-the-states-feed/educacion/feed.xml"
+          AUTHOR = "Charles Mayfield"
+          OWNER_EMAIL = "educationacrossthestates@gmail.com"
+          CATEGORY = "Education"
+          LANGUAGE = "es"
+          OUT = "educacion/feed.xml"
+
+          req = urllib.request.Request(UPSTREAM, headers={"User-Agent": "Mozilla/5.0"})
+          with urllib.request.urlopen(req, timeout=60) as resp:
+              feed = resp.read().decode("utf-8")
+
+          # The Muse template carries no channel owner/managingEditor email, and
+          # Amazon/Deezer validate the email inside the feed itself. Inject the
+          # network's monitored contact metadata into the channel header only;
+          # items, GUIDs and enclosures pass through untouched.
+          head, sep, rest = feed.partition("<item>")
+          if not sep:
+              raise SystemExit("no <item> found in Spanish upstream feed")
+          head = re.sub(r"\s*<itunes:author>.*?</itunes:author>", "", head, flags=re.S)
+          head = re.sub(r"\s*<itunes:category[^/]*/>", "", head)
+          head = re.sub(r"\s*<itunes:category[^>]*>.*?</itunes:category>", "", head, flags=re.S)
+          head = re.sub(r"\s*<itunes:owner>.*?</itunes:owner>", "", head, flags=re.S)
+          head = re.sub(r"\s*<managingEditor>.*?</managingEditor>", "", head, flags=re.S)
+          # Apple requires channel itunes:author + itunes:category; the
+          # upstream template also mislabels this Spanish show as "en" and
+          # points atom:self at the raw Muse feed. Fix all at channel level.
+          head, n = re.subn(r"<language>[^<]*</language>", f"<language>{LANGUAGE}</language>", head, count=1)
+          if n == 0:
+              raise SystemExit("anchor <language> tag not found")
+          tags = (
+              f"\n  <itunes:author>{AUTHOR}</itunes:author>"
+              f'\n  <itunes:category text="{CATEGORY}" />'
+              f"\n  <itunes:owner>\n    <itunes:name>{AUTHOR}</itunes:name>"
+              f"\n    <itunes:email>{OWNER_EMAIL}</itunes:email>\n  </itunes:owner>"
+              f"\n  <managingEditor>{OWNER_EMAIL} ({AUTHOR})</managingEditor>"
+          )
+          head = re.sub(r"(<language>[^<]*</language>)", r"\1" + tags, head, count=1)
+          head, n = re.subn(
+              r'(<atom:link href=")[^"]*(" rel="self")',
+              r"\g<1>" + MIRROR_URL + r"\g<2>",
+              head,
+              count=1,
+          )
+          if n == 0:
+              raise SystemExit("anchor atom:link rel=self not found")
+          feed = head + sep + rest
+
+          def guids(text):
+              return set(re.findall(r"<guid[^>]*>(.*?)</guid>", text))
+
+          # Compare full content, not just GUIDs: a GUID-only check would
+          # silently drop channel-metadata fixes (author/category/language)
+          # whenever the episode set is unchanged.
+          old_text = open(OUT, encoding="utf-8").read() if os.path.exists(OUT) else ""
+          if old_text == feed:
+              print(f"spanish feed unchanged ({len(guids(feed))} episodes)")
+          else:
+              os.makedirs(os.path.dirname(OUT), exist_ok=True)
+              with open(OUT, "w", encoding="utf-8") as f:
+                  f.write(feed)
+              print(f"updated educacion/feed.xml ({len(guids(feed))} episodes)")
+          PYEOF
+
       - name: Rebuild per-state index pages
         run: |
           python3 build-index.py
@@ -97,7 +166,7 @@ jobs:
         run: |
           git config user.name "podcast-feed-bot"
           git config user.email "podcast-feed-bot@users.noreply.github.com"
-          git add feed.xml index.html *.html
+          git add feed.xml index.html *.html educacion/feed.xml
           if git diff --cached --quiet; then
             echo "feed and index pages unchanged, nothing to commit"
           else
