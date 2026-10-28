@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Educación en los Estados</title>
+  <description>Educación en los Estados es el programa insignia en español de Education Across the States: explicaciones claras y completas, para padres y familias, sobre la educación especial y los derechos de los estudiantes — el IEP (programa de educación individualizado), la notificación previa por escrito, la educación pública gratuita y apropiada (FAPE), la Sección 504, las evaluaciones, la disciplina y la resolución de disputas. La ley federal y estatal, en el idioma que usted puede usar. Presentan Alex y Jordan. Productor: Charles Mayfield.
+
+AI Generated</description>
+  <language>en</language>
+  <itunes:author>Charles Mayfield</itunes:author>
+  <itunes:owner>
+    <itunes:name>Charles Mayfield</itunes:name>
+    <itunes:email>educationacrossthestates@gmail.com</itunes:email>
+  </itunes:owner>
+  <managingEditor>educationacrossthestates@gmail.com (Charles Mayfield)</managingEditor>
+  <itunes:explicit>false</itunes:explicit>
+  <atom:link href="https://muse.ai/podcasts/feed/1337692426099284/723356ab-bdbc-4b30-96b8-2a8971d748be" rel="self" type="application/rss+xml"/>
+  <itunes:image href="https://muse.ai/podcasts/media/1337692426099284/723356ab-bdbc-4b30-96b8-2a8971d748be/cover.png"/>
+  <image>
+    <url>https://muse.ai/podcasts/media/1337692426099284/723356ab-bdbc-4b30-96b8-2a8971d748be/cover.png</url>
+    <title>Educación en los Estados</title>
+    <link>https://muse.ai/podcasts/feed/1337692426099284/723356ab-bdbc-4b30-96b8-2a8971d748be</link>
+  </image>
+  <item>
+    <title>¿Qué es un IEP? El programa de educación individualizado, explicado para las familias</title>
+    <description>¿Qué es un IEP? El programa de educación individualizado, explicado para las familias
+
+En este primer episodio de Education Across the States en español, Alex y Jordan explican, en palabras claras y sin tecnicismos, qué es un IEP: el programa de educación individualizado que describe la educación especial y los servicios relacionados de un estudiante con una discapacidad en la escuela pública.
+
+El recorrido completo del proceso, paso a paso: cómo la ley IDEA — la Ley de Educación para Individuos con Discapacidades — exige el plan y garantiza una educación pública gratuita y apropiada (FAPE) en el ambiente lo menos restrictivo (LRE); la diferencia entre un IEP y un plan de la Sección 504; el deber de Child Find y cómo empieza una evaluación, incluida la petición por escrito de la familia; el consentimiento informado y la elegibilidad; quiénes forman el equipo del IEP y el lugar de los padres en ese equipo por ley; y qué debe contener el documento: niveles actuales de rendimiento, metas anuales medibles, servicios con su frecuencia y duración, participación con estudiantes sin discapacidades, adaptaciones en las evaluaciones y fechas de servicio y de revisión anual. También: la reevaluación al menos cada tres años, el plan de transición a más tardar en el primer IEP vigente cuando el estudiante cumple dieciséis años, y los derechos que protegen a la familia en cada paso — la notificación previa por escrito, las garantías procesales, el derecho a examinar los expedientes y a una evaluación educativa independiente, y la permanencia del estudiante en su colocación actual mientras se resuelve una disputa. Si la familia no está de acuerdo, el episodio explica los caminos disponibles, de la reunión del equipo y la mediación a la queja ante el estado, la audiencia del proceso legal debido y la educación compensatoria.
+
+Este episodio es información general para las familias. No es asesoría legal y no sustituye el consejo de un abogado.
+
+Presentado por Alex y Jordan · Education Across the States en español
+
+Fuentes:
+- 20 U.S.C. §1414(d) — el programa de educación individualizado (IEP): contenido, equipo y revisión, en la ley IDEA.
+- 34 CFR §§300.320–300.324 — los reglamentos federales que definen el contenido del IEP, la participación de los padres y del estudiante, la transición y la revisión anual.
+- IDEA — Individuals with Disabilities Education Act, U.S. Department of Education: https://sites.ed.gov/idea/
+- Glossary of Spanish Translations of Common IDEA Terms (OSEP, housed by the Center for Parent Information and Resources — CPIR): https://www.parentcenterhub.org/osep-english-to-spanish-translation-glossary/glossary/ — la fuente de las formas españolas de los términos técnicos usados en este episodio.
+
+AI Generated</description>
+    <enclosure url="https://muse.ai/podcasts/media/1337692426099284/723356ab-bdbc-4b30-96b8-2a8971d748be/ep-d14caa77-0b7d-4f56-8cc2-10b4d69ca00f.mp3" length="4555237" type="audio/mpeg"/>
+    <guid isPermaLink="false">ep-d14caa77-0b7d-4f56-8cc2-10b4d69ca00f</guid>
+    <pubDate>Wed, 28 Oct 2026 02:20:06 +0000</pubDate>
+    <itunes:duration>569</itunes:duration>
+  </item>
+</channel>
+</rss>
