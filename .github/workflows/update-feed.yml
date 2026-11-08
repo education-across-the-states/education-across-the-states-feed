@@ -2,7 +2,9 @@ name: Update Umbrella Feed
 
 on:
   schedule:
-    - cron: '20 12 * * *'
+    - cron: '20 12 * * *'  # 8:20 AM ET — primary rebuild
+    - cron: '20 17 * * *'  # 1:20 PM ET — stopgap backstop (added Nov 8, 2026)
+    - cron: '20 22 * * *'  # 6:20 PM ET — stopgap evening backstop (added Nov 8, 2026)
   workflow_dispatch:
 
 permissions:
@@ -39,9 +41,23 @@ jobs:
               "ep-1a035f9b",  # defective AR original (full GUID on file in the sync-discipline notes); replaced by corrected edition
           ]
 
-          req = urllib.request.Request(UPSTREAM, headers={"User-Agent": "Mozilla/5.0"})
-          with urllib.request.urlopen(req, timeout=60) as resp:
-              feed = resp.read().decode("utf-8")
+          import time
+
+          # The upstream feed can lag behind publish time or hiccup; retry before giving up.
+          feed = None
+          for attempt in range(4):
+              try:
+                  req = urllib.request.Request(UPSTREAM, headers={"User-Agent": "Mozilla/5.0"})
+                  with urllib.request.urlopen(req, timeout=60) as resp:
+                      feed = resp.read().decode("utf-8")
+                  break
+              except Exception as e:
+                  print(f"upstream fetch attempt {attempt + 1} failed: {e}")
+                  if attempt < 3:
+                      time.sleep(30)
+          if feed is None:
+              raise SystemExit("upstream feed fetch failed after retries")
+          if True:
               # Remove any <item> block whose <guid> contains an excluded GUID.
               def _remove_excluded_items(xml):
                   def _keep(match):
@@ -102,9 +118,22 @@ jobs:
           LANGUAGE = "es"
           OUT = "educacion/feed.xml"
 
-          req = urllib.request.Request(UPSTREAM, headers={"User-Agent": "Mozilla/5.0"})
-          with urllib.request.urlopen(req, timeout=60) as resp:
-              feed = resp.read().decode("utf-8")
+          import time
+
+          # The upstream feed can lag behind publish time or hiccup; retry before giving up.
+          feed = None
+          for attempt in range(4):
+              try:
+                  req = urllib.request.Request(UPSTREAM, headers={"User-Agent": "Mozilla/5.0"})
+                  with urllib.request.urlopen(req, timeout=60) as resp:
+                      feed = resp.read().decode("utf-8")
+                  break
+              except Exception as e:
+                  print(f"upstream fetch attempt {attempt + 1} failed: {e}")
+                  if attempt < 3:
+                      time.sleep(30)
+          if feed is None:
+              raise SystemExit("upstream feed fetch failed after retries")
 
           # The Muse template carries no channel owner/managingEditor email, and
           # Amazon/Deezer validate the email inside the feed itself. Inject the
