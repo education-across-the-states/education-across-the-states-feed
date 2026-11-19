@@ -69,6 +69,38 @@ jobs:
 
               feed = _remove_excluded_items(feed)
 
+              # Newest-first item order (Kerry, Nov 18, 2026) — flagship umbrella
+              # only; the educacion step below keeps upstream order. The muse.ai
+              # upstream emits oldest-first; Apple-facing presentation must be
+              # newest-first. Only item ORDER changes: blocks move verbatim,
+              # GUIDs/content untouched, stable sort (equal pubDates keep
+              # upstream order); missing/unparseable pubDates sink to the end.
+              # NOTE: the write gate below compares GUID SETS, so a pure reorder
+              # of an unchanged set prints "no change" — commit a reordered
+              # feed.xml once (done Nov 18, 2026) and this sort keeps every
+              # future rebuild newest-first.
+              import email.utils
+
+              def _sort_items_newest_first(xml):
+                  matches = list(re.finditer(r"<item>.*?</item>", xml, flags=re.S))
+                  if len(matches) < 2:
+                      return xml
+                  def _ts(block):
+                      m = re.search(r"<pubDate>(.*?)</pubDate>", block)
+                      if not m:
+                          return 0.0
+                      try:
+                          return email.utils.parsedate_to_datetime(m.group(1)).timestamp()
+                      except Exception:
+                          return 0.0
+                  blocks = [m.group(0) for m in matches]
+                  order = sorted(range(len(blocks)), key=lambda i: -_ts(blocks[i]))
+                  head = xml[:matches[0].start()]
+                  tail = xml[matches[-1].end():]
+                  return head + "\n  ".join(blocks[i] for i in order) + tail
+
+              feed = _sort_items_newest_first(feed)
+
           feed = re.sub(r"\s*<itunes:author>.*?</itunes:author>", "", feed, flags=re.S)
           feed = re.sub(r"\s*<itunes:category[^/]*/>", "", feed)
           feed = re.sub(r"\s*<itunes:category[^>]*>.*?</itunes:category>", "", feed, flags=re.S)
